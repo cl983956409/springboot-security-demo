@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.security.demo.dao.user.PersistentLoginsDao">
+    <resultMap id="Base_Result_Map" type="com.security.demo.bean.user.PersistentLoginsBo">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="USER_NAME" property="username" jdbcType="VARCHAR"/>
+        <result column="SERIES" property="series" jdbcType="VARCHAR"/>
+        <result column="TOKEN" property="token" jdbcType="VARCHAR"/>
+        <result column="LAST_USED_TIME" property="lastUsedTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ID , USER_NAME , SERIES , TOKEN , LAST_USED_TIME
+    </sql>
+    <insert id="insertInfo">
+        insert into `persistent_logins` (`USER_NAME`,`SERIES`,`TOKEN`, `LAST_USED_TIME`)
+        values (#{username},#{series},#{token},#{lastUsedTime})
+    </insert>
+    <!--不存在则插入，存在则更新 on duplicate key update-->
+    <insert id="saveInfo">
+        insert into `persistent_logins` (`USER_NAME`,`SERIES`,`TOKEN`, `LAST_USED_TIME`)
+        values (#{username},#{series},#{token},#{lastUsedTime})
+        on duplicate key update
+        TOKEN = #{token}, SERIES = #{series} , LAST_USED_TIME = #{lastUsedTime}
+    </insert>
+    <update id="updateInfo">
+        update `persistent_logins` set
+        TOKEN = #{token}, LAST_USED_TIME = #{date} where SERIES = #{series}
+    </update>
+
+    <delete id="removeInfoByUsername" parameterType="java.lang.String">
+        delete from `persistent_logins`
+        where `USER_NAME`=#{username}
+    </delete>
+
+    <select id="selectInfo" resultMap="Base_Result_Map" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from `persistent_logins`
+        where SERIES = #{series}
+    </select>
+
+</mapper>

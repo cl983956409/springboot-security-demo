@@ -1,0 +1,44 @@
+
+
+CREATE TABLE `persistent_logins` (
+  `ID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `USER_NAME` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `SERIES` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `TOKEN` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `LAST_USED_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE KEY `idx_SERIES` (`SERIES`) USING BTREE,
+  UNIQUE KEY `idx_USERNAME` (`USER_NAME`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `user` (
+  `ID` bigint(11) NOT NULL AUTO_INCREMENT,
+  `USER_NAME` varchar(32) NOT NULL,
+  `PASSWORD` varchar(64) NOT NULL,
+  `ACCOUNT_NON_EXPIRED` varchar(4) DEFAULT NULL,
+  `ACCOUNT_NON_LOCKED` varchar(4) DEFAULT NULL,
+  `CREDENTIALS_NON_EXPIRED` varchar(4) DEFAULT NULL,
+  `ENABLED` varchar(4) DEFAULT NULL,
+  `GMT_CREATE` datetime NOT NULL,
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE KEY `idx_name` (`USER_NAME`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_role_sort` (
+  `id` int(11) NOT NULL COMMENT '主键id',
+  `sort_name` varchar(16) NOT NULL COMMENT '分类名',
+  `sort_title` varchar(16) DEFAULT NULL COMMENT '分类标题',
+  PRIMARY KEY (`id`),
+  KEY `sort_name` (`sort_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_roles` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `USER_ID` int(11) DEFAULT NULL COMMENT '用户id',
+  `ROLE` varchar(8) DEFAULT NULL COMMENT '用户权限',
+  `GMT_CREATE` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE KEY `IDX_USER_ROLE` (`USER_ID`,`ROLE`) USING BTREE COMMENT 'userId+role 唯一',
+  KEY `idx_roles` (`ROLE`),
+  CONSTRAINT `idx_roles` FOREIGN KEY (`ROLE`) REFERENCES `user_role_sort` (`sort_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
