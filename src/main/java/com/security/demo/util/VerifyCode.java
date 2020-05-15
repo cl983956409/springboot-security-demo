@@ -74,7 +74,7 @@ public class VerifyCode {
         BufferedImage image = createImage();
         Graphics2D g2 = (Graphics2D) image.getGraphics();
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 4; i++) {
             String s = randomChar() + "";
             sb.append(s);
             g2.setColor(randomColor());

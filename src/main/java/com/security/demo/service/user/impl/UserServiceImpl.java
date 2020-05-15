@@ -1,4 +1,4 @@
-package com.security.demo.service.user;
+package com.security.demo.service.user.impl;
 
 import com.security.demo.bean.user.Role;
 import com.security.demo.bean.user.UserInfo;
